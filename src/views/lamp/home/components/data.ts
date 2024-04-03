@@ -62,10 +62,22 @@ export const navItems: NavItem[] = [
 
 export const dynamicInfoItems: DynamicInfoItem[] = [
   {
-    percent: 50,
-    name: '4.16.0：',
-    date: '正在开发中...',
-    desc: ` <a target="_blank" href="https://tangyh.top">4.x系列基于jdk17的none模式开源，停止3.x版本新功能开发</a>`,
+    percent: 40,
+    name: '4.18.0-java17/4.18.0',
+    date: '正在开发',
+    desc: `<a target="_blank" href="https://tangyh.top">全新后台UI，即将来袭...</a>`,
+  },
+  {
+    percent: 100,
+    name: '4.17.0-java17/4.17.0',
+    date: '2024年3月1日',
+    desc: `<a target="_blank" href="https://www.oschina.net/news/281346">前端bug修复</a>`,
+  },
+  {
+    percent: 100,
+    name: '4.16.0-java17/4.16.0',
+    date: '2024年1月15日',
+    desc: `<a target="_blank" href="https://www.oschina.net/news/275912">4.x系列基于jdk17的none模式开源，停止3.x版本新功能开发</a>`,
   },
   {
     percent: 100,

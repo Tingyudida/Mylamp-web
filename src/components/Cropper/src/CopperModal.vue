@@ -125,17 +125,15 @@
   import { dataURLtoBlob } from '/@/utils/file/base64Conver';
   import { isFunction } from '/@/utils/is';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { uploadToDef, uploadToTenant } from '/@/api/lamp/file/upload';
+  import { uploadFile } from '/@/api/lamp/file/upload';
 
   const props = {
     circled: { type: Boolean, default: true },
     uploadApi: {
       type: Function as PropType<PromiseFn>,
-      default: () => uploadToTenant,
+      default: () => uploadFile,
       required: false,
     },
-    // 是否上传到到默认库。 设置为true，文件将调用 asyncFindDefUrlById 加载异步文件
-    isDef: { type: Boolean, default: false },
     // 后台接口 接收文件的参数名
     name: {
       type: String as PropType<string>,
@@ -200,7 +198,7 @@
       }
 
       async function handleOk() {
-        const uploadApi = props.isDef ? uploadToDef : uploadToTenant;
+        const uploadApi = uploadFile;
         if (uploadApi && isFunction(uploadApi)) {
           const blob = dataURLtoBlob(previewSource.value);
           try {

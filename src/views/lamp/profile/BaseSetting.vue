@@ -66,8 +66,7 @@
       });
 
       const avatarId = computed(() => {
-        const { avatarId } = userStore.getUserInfo;
-        return { id: avatarId };
+        return userStore.getUserInfo?.avatarId;
       });
 
       async function handleUpdateAvatar(data: any) {

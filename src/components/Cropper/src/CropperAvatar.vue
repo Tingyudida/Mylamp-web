@@ -27,12 +27,11 @@
       :uploadParams="uploadParams"
       :src="realSrc"
       :circled="circled"
-      :isDef="isDef"
     />
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, computed, CSSProperties, unref, ref, watch, PropType } from 'vue';
+  import { computed, CSSProperties, defineComponent, PropType, ref, unref, watch } from 'vue';
   import CopperModal from './CopperModal.vue';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useModal } from '/@/components/Modal';
@@ -40,19 +39,16 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import type { ButtonProps } from '/@/components/Button';
   import Icon from '/@/components/Icon';
-  import { asyncFindUrlById, asyncFindDefUrlById } from '/@/api/lamp/file/upload';
-  import { FileResultVO } from '/@/api/lamp/file/model/uploadModel';
+  import { asyncFindUrlById } from '/@/api/lamp/file/upload';
 
   const props = {
     circled: { type: Boolean, default: true },
     width: { type: [String, Number], default: '200px' },
-    value: { type: Object as PropType<FileResultVO>, default: {} },
+    value: { type: String, default: '' },
     showBtn: { type: Boolean, default: true },
     btnProps: { type: Object as PropType<ButtonProps> },
     btnText: { type: String, default: '' },
     alt: { type: String, default: '' },
-    // 是否上传到到默认库。 设置为true，文件将调用 asyncFindDefUrlById 加载异步文件
-    isDef: { type: Boolean, default: false },
     uploadApi: {
       type: Function as PropType<PromiseFn>,
       default: null,
@@ -101,7 +97,7 @@
         () => props.value,
         () => {
           realSrc.value = '';
-          if (props.value && props.value.id) {
+          if (props.value) {
             loadSrc();
           }
         },
@@ -109,11 +105,11 @@
       );
 
       function loadSrc() {
-        if (!props.value.id) {
+        if (!props.value) {
           return;
         }
-        const api = props.isDef ? asyncFindDefUrlById : asyncFindUrlById;
-        api(props.value.id).then((res) => {
+        const api = asyncFindUrlById;
+        api(props.value).then((res) => {
           if (res.code === 0) {
             realSrc.value = res.data as string;
           }
@@ -122,8 +118,8 @@
 
       function handleUploadSuccess({ data }) {
         createMessage.success(t('component.cropper.uploadSuccess'));
-        emit('update:value', data);
-        emit('change', data);
+        emit('update:value', data.id);
+        emit('change', data.id);
       }
 
       function handleOpenModal() {
