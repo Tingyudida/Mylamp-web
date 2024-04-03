@@ -1,5 +1,4 @@
 import { BaseOrgResultVO } from '/@/api/basic/user/model/baseOrgModel';
-import { Tenant } from '/@/api/devOperation/tenant/model/tenantModel';
 
 export type GrantType = 'CAPTCHA' | 'PASSWORD' | 'MOBILE' | 'REFRESH_TOKEN';
 
@@ -33,15 +32,12 @@ export interface RegisterByEmailVO extends RegisterVO {
 }
 
 export interface OrgResultVO {
-  // 当前租户下，所属单位
-  companyList: BaseOrgResultVO[];
-  // 当前租户下和单位下，所属部门
-  deptList: BaseOrgResultVO[];
+  orgList: BaseOrgResultVO[];
   // 当前单位ID
   currentCompanyId: string;
   // 当前部门ID
   currentDeptId: string;
-  tenantList: Tenant[];
+  employeeId: string;
 }
 
 /**

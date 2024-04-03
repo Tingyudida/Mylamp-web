@@ -18,6 +18,14 @@ export enum OrgTypeEnum {
   DEPT = '20',
 }
 
+export const ORG_TYPE_TAG_MAP = new Map();
+ORG_TYPE_TAG_MAP.set(OrgTypeEnum.COMPANY, 'success');
+ORG_TYPE_TAG_MAP.set(OrgTypeEnum.DEPT, 'info');
+
+export const ORG_TYPE_MAP = new Map();
+ORG_TYPE_MAP.set(OrgTypeEnum.COMPANY, '单位');
+ORG_TYPE_MAP.set(OrgTypeEnum.DEPT, '部门');
+
 // 角色类别
 export enum RoleCategoryEnum {
   FUNCTION = '10',

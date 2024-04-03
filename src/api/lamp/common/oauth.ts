@@ -195,10 +195,10 @@ export function logout(params: LogoutParams) {
   });
 }
 
-export function switchTenantAndOrg(companyId: string, deptId: string) {
+export function switchTenantAndOrg(orgId: string) {
   return defHttp.put<LoginResultVO>({
     ...Api.SwitchTenantAndOrg,
-    params: { companyId, deptId },
+    params: { orgId },
     headers: {
       'Content-Type': ContentTypeEnum.FORM_URLENCODED,
     },

@@ -17,28 +17,11 @@
       class="p-4 enter-x"
     >
       <FormItem label="单位" name="currentCompanyId">
-        <Select v-model:value="formData.currentCompanyId" @change="changeCompany">
-          <SelectOption
-            v-for="company in formState.companyList"
-            :key="company.id"
-            :label="company.name"
-            :value="company.id"
-          >
-            {{ company.name }}
-          </SelectOption>
-        </Select>
-      </FormItem>
-      <FormItem label="部门" name="currentDeptId">
-        <Select v-model:value="formData.currentDeptId">
-          <SelectOption
-            v-for="dept in formState.deptList"
-            :key="dept.id"
-            :label="dept.name"
-            :value="dept.id"
-          >
-            {{ dept.name }}
-          </SelectOption>
-        </Select>
+        <RadioGroup v-model:value="formData.orgId">
+          <RadioButton v-for="org in formState.orgList" :key="org.id" :value="org.id">
+            {{ getOrgName(org) }}
+          </RadioButton>
+        </RadioGroup>
       </FormItem>
     </Form>
     <Alert message="注意事项">
@@ -58,12 +41,13 @@
 </template>
 <script lang="ts">
   import { defineComponent, reactive } from 'vue';
-  import { Alert, Form, Select } from 'ant-design-vue';
+  import { Alert, Form, Radio, RadioGroup } from 'ant-design-vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useUserStore } from '/@/store/modules/user';
-  import { findCompanyDept, findDeptByCompany } from '/@/api/lamp/common/oauth';
+  import { findCompanyDept } from '/@/api/lamp/common/oauth';
   import { BaseOrgResultVO } from '/@/api/basic/user/model/baseOrgModel';
+  import { ORG_TYPE_MAP } from '/@/enums/biz/base';
 
   export default defineComponent({
     name: 'SwitchCompany',
@@ -71,8 +55,8 @@
       BasicModal,
       Form,
       FormItem: Form.Item,
-      Select,
-      SelectOption: Select.Option,
+      RadioButton: Radio.Button,
+      RadioGroup,
       Alert,
     },
     emits: ['success', 'register'],
@@ -81,31 +65,28 @@
       const userStore = useUserStore();
 
       const formData = reactive({
-        currentCompanyId: '',
-        currentDeptId: '',
+        orgId: null,
       });
       const formState = reactive({
-        companyList: [] as BaseOrgResultVO[],
-        deptList: [] as BaseOrgResultVO[],
+        orgList: [] as BaseOrgResultVO[],
+        // 所属单位id
+        currentCompanyId: '',
+        // 所属部门id
+        currentDeptId: '',
       });
 
       const [registerModal, { setModalProps, closeModal }] = useModalInner(async () => {
         setModalProps({ confirmLoading: false });
 
+        formData.orgId = null;
         await loadOrg();
       });
 
       async function loadOrg() {
         const org = await findCompanyDept();
-        formData.currentCompanyId = org.currentCompanyId;
-        formData.currentDeptId = org.currentDeptId;
-        formState.companyList = org.companyList;
-        formState.deptList = org.deptList;
-      }
-
-      async function changeCompany(companyId: string) {
-        formState.deptList = await findDeptByCompany(companyId);
-        formData.currentDeptId = formState.deptList?.[0]?.id;
+        formState.currentCompanyId = org.currentCompanyId;
+        formState.currentDeptId = org.currentDeptId;
+        formState.orgList = org.orgList;
       }
 
       function switchCompanyConfirm() {
@@ -120,11 +101,22 @@
         });
       }
 
+      function getOrgName(org: BaseOrgResultVO) {
+        let name = `[${ORG_TYPE_MAP.get(org.type)}] `;
+
+        name += org.name;
+        if (
+          (formState.currentDeptId !== null && formState.currentDeptId === org.id) ||
+          (formState.currentDeptId === null && formState.currentCompanyId === org.id)
+        ) {
+          name += '(当前)';
+        }
+        return name;
+      }
+
+
       async function switchCompany() {
-        const userInfo = await userStore.switchTenantAndOrg(
-          formData.currentCompanyId,
-          formData.currentDeptId,
-        );
+        const userInfo = await userStore.switchTenantAndOrg(formData.orgId as unknown as string);
         if (userInfo) {
           createMessage.success('切换成功');
         }
@@ -133,7 +125,6 @@
       async function handleSubmit() {
         try {
           setModalProps({ confirmLoading: true });
-          console.log(formData);
           switchCompanyConfirm();
           emit('success');
           closeModal();
@@ -147,7 +138,7 @@
         formData,
         formState,
         handleSubmit,
-        changeCompany,
+        getOrgName,
       };
     },
   });

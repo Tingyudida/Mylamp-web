@@ -135,9 +135,9 @@ export const useUserStore = defineStore({
       this.applicationId = '';
     },
 
-    async switchTenantAndOrg(companyId: string, deptId: string) {
+    async switchTenantAndOrg(orgId: string) {
       try {
-        const data = await switchTenantAndOrg(companyId, deptId);
+        const data = await switchTenantAndOrg(orgId);
         const { token, refreshToken, expiration } = data;
         // save token
         this.setToken(token);
