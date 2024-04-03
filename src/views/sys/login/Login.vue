@@ -26,11 +26,13 @@
             <div class="mt-10 font-medium text-white -enter-x">
               <span class="inline-block mt-4 text-3xl"> {{ t('sys.login.signInTitle') }}</span>
             </div>
-            <div class="mt-5 font-normal text-white text-md dark:text-gray-500 -enter-x">
+            <div class="mt-5 font-normal text-white text-md dark:text-gray-500 -enter-x" style="color: yellow;">
               {{ t('sys.login.signInDesc') }} <br />
-              内置超级管理员账号： lamp/lamp <br />
+              账号： lamp <br />
+              密码： lamp <br /><br />
               更多的账号以及他们拥有什么权限，请登录系统查看 <br />
-              新建的员工或用户登录名为用户名、手机号、 <br />邮箱、身份证，密码为：123456
+              新建的用户 账号: 用户名、手机号、邮箱、身份证 <br />
+              新建的用户 密码：123456
             </div>
           </div>
         </div>
