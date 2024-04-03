@@ -405,7 +405,7 @@
               class={`${bem('title')} pl-2`}
               onClick={handleClickNode.bind(null, item[keyField], item[childrenField])}
             >
-              {item?.slots?.title ? (
+              {slots?.title ? (
                 getSlot(slots, 'title', item)
               ) : (
                 <>
