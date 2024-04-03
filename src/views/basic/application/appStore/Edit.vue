@@ -47,9 +47,7 @@
         // 赋值
         const record = { ...data?.record };
         const appendixIcons = await listByBizId({
-          prefix: ServicePrefixEnum.TENANT,
           bizId: record.id,
-          isDef: true,
           bizType: FileBizTypeEnum.DEF_APPLICATION_LOGO,
         });
         record.appendixIcon = appendixIcons?.[0]?.id;

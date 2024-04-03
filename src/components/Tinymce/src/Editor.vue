@@ -73,7 +73,7 @@
   import { isNumber } from '/@/utils/is';
   import { useLocale } from '/@/locales/useLocale';
   import { useAppStore } from '/@/store/modules/app';
-  import { asyncFindDefUrlById, asyncFindUrlById } from '/@/api/lamp/file/upload';
+  import { asyncFindUrlById } from '/@/api/lamp/file/upload';
 
   const tinymceProps = {
     options: {
@@ -108,10 +108,6 @@
     showImageUpload: {
       type: Boolean,
       default: true,
-    },
-    isDef: {
-      type: Boolean,
-      default: false,
     },
     uploadParams: {
       type: Object as PropType<any>,
@@ -316,7 +312,7 @@
         const content = editor?.getContent() ?? '';
 
         if (fileId) {
-          const api = props.isDef ? asyncFindDefUrlById : asyncFindUrlById;
+          const api = asyncFindUrlById;
           api(fileId).then((res) => {
             // bug: 这里返回的图片链接必须是永久有效的，否则会出现图片过期无法访问的情况。 暂时没好的解决方案
             if (res.code === 0) {

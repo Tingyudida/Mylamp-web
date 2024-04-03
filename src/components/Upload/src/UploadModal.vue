@@ -61,7 +61,7 @@
   import FileList from './FileList.vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { FileResultVO } from '/@/api/lamp/file/model/uploadModel';
-  import { uploadToDef, uploadToTenant } from '/@/api/lamp/file/upload';
+  import { uploadFile } from '/@/api/lamp/file/upload';
 
   export default defineComponent({
     components: { BasicModal, Upload, Alert, FileList },
@@ -167,7 +167,7 @@
       }
 
       async function uploadApiByItem(item: FileItem) {
-        const api = props.api ?? (props.isDef ? uploadToDef : uploadToTenant);
+        const api = props.api ?? uploadFile;
         if (!api || !isFunction(api)) {
           return warn('upload api must exist and be a function');
         }
@@ -276,7 +276,7 @@
       }
 
       return {
-        columns: createTableColumns(props.isDef) as any[],
+        columns: createTableColumns() as any[],
         actionColumn: createActionColumn(handleRemove) as any,
         register,
         closeModal,

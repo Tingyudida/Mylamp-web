@@ -8,7 +8,7 @@
   import { Avatar } from 'ant-design-vue';
   import { useAttrs } from '/@/hooks/core/useAttrs';
   import { propTypes } from '/@/utils/propTypes';
-  import { asyncFindUrlById, asyncFindDefUrlById } from '/@/api/lamp/file/upload';
+  import { asyncFindUrlById } from '/@/api/lamp/file/upload';
 
   export default defineComponent({
     name: 'AvatarPreview',
@@ -19,7 +19,6 @@
       src: propTypes.string.def(''),
       fileId: propTypes.string.def(''),
       errorTxt: propTypes.string.def(''),
-      isDef: propTypes.bool.def(false),
     },
     setup(props) {
       const attrs = useAttrs();
@@ -52,7 +51,7 @@
         if (!props.fileId) {
           return;
         }
-        const api = props.isDef ? asyncFindDefUrlById : asyncFindUrlById;
+        const api = asyncFindUrlById;
         api(props.fileId).then((res) => {
           if (res.code === 0) {
             realSrc.value = res.data as string;

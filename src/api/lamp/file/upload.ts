@@ -1,6 +1,7 @@
-import { FileResultVO, AppendixQuery } from './model/uploadModel';
+import { FileResultVO, AppendixQuery, AppendixResultVO } from './model/uploadModel';
 import { defHttp } from '/@/utils/http/axios';
 import qs from 'qs';
+import type { AxiosProgressEvent } from 'axios';
 import { UploadFileParams } from '/#/axios';
 import { ContentTypeEnum, RequestEnum } from '/@/enums/httpEnum';
 import { ServicePrefixEnum } from '/@/enums/commonEnum';
@@ -8,14 +9,13 @@ import { TimeDelayReq, DelayResult, AsyncResult, CacheKeyFunc } from '/@/utils/l
 import { errImg } from '/@/utils/file/base64Conver';
 
 /**
- * 上传到 租户库。 此接口适用于将文件上到租户自己的库
+ * 上传
  *
- *  此接口要对应 asyncFindUrlById 接口来回显
  * @description: Upload interface
  */
-export function uploadToTenant(
+export function uploadFile(
   params: UploadFileParams,
-  onUploadProgress?: (progressEvent: ProgressEvent) => void,
+  onUploadProgress?: (progressEvent: AxiosProgressEvent) => void,
 ) {
   return defHttp.uploadFile<FileResultVO>(
     {
@@ -28,28 +28,7 @@ export function uploadToTenant(
   );
 }
 
-/**
- * 上传到默认库， 此接口适用于def库的表 上传文件到默认库
- *
- * 此接口要对应 asyncFindDefUrlById 接口来回显
- * @description: Upload interface
- */
-export function uploadToDef(
-  params: UploadFileParams,
-  onUploadProgress?: (progressEvent: ProgressEvent) => void,
-) {
-  return defHttp.uploadFile<FileResultVO>(
-    {
-      url: `${ServicePrefixEnum.FILE}/file/anyTenant/upload`,
-      onUploadProgress,
-      // 60 s
-      timeout: 60 * 1000,
-    },
-    params,
-  );
-}
-
-export const downloadFromTenant = (ids: string[] | number[]) =>
+export const downloadFile = (ids: string[] | number[]) =>
   defHttp.request<any>(
     {
       url: ServicePrefixEnum.FILE + '/file/anyone/download',
@@ -60,38 +39,41 @@ export const downloadFromTenant = (ids: string[] | number[]) =>
     { isReturnNativeResponse: true },
   );
 
-export const downloadFromDef = (ids: string[] | number[]) =>
-  defHttp.request<any>(
-    {
-      url: ServicePrefixEnum.FILE + '/file/anyTenant/download',
-      method: RequestEnum.GET,
-      responseType: 'blob',
-      params: qs.stringify({ ids }, { arrayFormat: 'repeat' }),
-    },
-    { isReturnNativeResponse: true },
-  );
-
-export const findUrlFormTenantById = (params: string[] | number[]) => {
+/**
+ * 根据文件id获取文件url
+ *
+ * @param params 文件id
+ * @returns
+ */
+export const findUrlById = (params: string[] | number[]) => {
   return defHttp.request<string[]>({
-    url: ServicePrefixEnum.FILE + '/file/anyone/findUrlById',
+    url: `${ServicePrefixEnum.BASE}/file/anyone/findUrlById`,
     method: RequestEnum.POST,
     params,
   });
 };
 
-export const findUrlFromDefById = (params: string[] | number[]) => {
-  return defHttp.request<string[]>({
-    url: ServicePrefixEnum.FILE + '/file/anyTenant/findUrlById',
-    method: RequestEnum.POST,
-    params,
-  });
-};
-
+/**
+ * 根据业务id和业务类型，查询附件
+ *
+ * @param params 附件参数
+ * @returns
+ */
 export const listByBizId = (params: AppendixQuery) => {
-  return defHttp.request<FileResultVO[]>({
-    url: params.prefix + '/anyone/appendix/listByBizId',
+  return defHttp.request<AppendixResultVO[]>({
+    url: `${ServicePrefixEnum.BASE}/anyone/appendix/listByBizId`,
     method: RequestEnum.POST,
-    params: params,
+    params,
+    headers: {
+      'Content-Type': ContentTypeEnum.FORM_URLENCODED,
+    },
+  });
+};
+export const listFileByBizId = (params: AppendixQuery) => {
+  return defHttp.request<FileResultVO[]>({
+    url: `${ServicePrefixEnum.BASE}/anyone/appendix/listFileByBizId`,
+    method: RequestEnum.POST,
+    params,
     headers: {
       'Content-Type': ContentTypeEnum.FORM_URLENCODED,
     },
@@ -116,38 +98,21 @@ function buildResult(paramList: Array<any>, cacheKey: CacheKeyFunc, result: stri
   return resultMap;
 }
 
-const findUrlFormTenantByIdReq = new TimeDelayReq({
+const findUrlByIdReq = new TimeDelayReq({
   cacheKey: (param: Recordable) => `${param}`,
   // 实现批量请求
   async api(paramList, cacheKey) {
-    const result = await findUrlFormTenantById(paramList);
-    return buildResult(paramList, cacheKey, result);
-  },
-});
-
-const findUrlFromDefByIdReq = new TimeDelayReq({
-  cacheKey: (param: Recordable) => `${param}`,
-  // 实现批量请求
-  async api(paramList, cacheKey) {
-    const result = await findUrlFromDefById(paramList);
+    const result = await findUrlById(paramList);
     return buildResult(paramList, cacheKey, result);
   },
 });
 
 /**
- * 查询base库的文件
- * @param id base库 base_file表的文件id
+ * 异步批量查询文件
+ *
+ * @param id 文件id
  * @returns 访问路径
  */
 export async function asyncFindUrlById(id: string): Promise<AsyncResult> {
-  return findUrlFormTenantByIdReq.loadByParam(id);
-}
-
-/**
- * 查询Def库的文件
- * @param id defalts库 base_file表的文件id
- * @returns 访问路径
- */
-export async function asyncFindDefUrlById(id: string): Promise<AsyncResult> {
-  return findUrlFromDefByIdReq.loadByParam(id);
+  return findUrlByIdReq.loadByParam(id);
 }

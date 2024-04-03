@@ -29,7 +29,6 @@
 
     <UploadPreviewModal
       :value="fileList"
-      :is-def="isDef"
       @register="registerPreviewModal"
       @list-change="handlePreviewChange"
       @delete="handlePreviewDelete"

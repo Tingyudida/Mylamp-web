@@ -8,10 +8,9 @@
         <div class="change-avatar">
           <div class="mb-2"> 头像 </div>
           <CropperAvatar
-            :uploadApi="uploadToDef"
+            :uploadApi="uploadFile"
             :uploadParams="{ bizType: FileBizTypeEnum.BASE_USER_AVATAR }"
             :value="avatarId"
-            :isDef="true"
             btnText="更换头像"
             :btnProps="{ preIcon: 'ant-design:cloud-upload-outlined' }"
             @change="handleUpdateAvatar"
@@ -37,7 +36,7 @@
   import { updateBaseInfo, updateAvatar } from '/@/api/lamp/profile/userInfo';
   import { userInfoSchemas } from './Userinfo/data';
   import { useUserStore } from '/@/store/modules/user';
-  import { uploadToDef } from '/@/api/lamp/file/upload';
+  import { uploadFile } from '/@/api/lamp/file/upload';
 
   export default defineComponent({
     components: {
@@ -93,7 +92,7 @@
       return {
         avatarId,
         register,
-        uploadToDef,
+        uploadFile,
         handleUpdateAvatar,
         handleSubmit,
         FileBizTypeEnum,

@@ -1,5 +1,3 @@
-import { ServicePrefixEnum } from '/@/enums/commonEnum';
-
 export interface AppendixSaveVO {
   id: string;
   bizId: string;
@@ -43,8 +41,6 @@ export interface AppendixResultVO {
 }
 
 export interface AppendixQuery {
-  prefix: ServicePrefixEnum;
   bizId: string;
-  isDef?: boolean;
   bizType?: string;
 }

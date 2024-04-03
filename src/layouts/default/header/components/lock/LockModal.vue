@@ -10,7 +10,6 @@
       <div :class="`${prefixCls}__header`">
         <AvatarPreview
           :size="70"
-          :isDef="true"
           :fileId="getUserInfo?.avatarId"
           :errorTxt="getUserInfo?.nickName?.substr(0, 1)"
         />

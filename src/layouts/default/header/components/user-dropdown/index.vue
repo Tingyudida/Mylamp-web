@@ -5,7 +5,6 @@
         <AvatarPreview
           :errorTxt="getUserInfo?.nickName?.substring(0, 1)"
           :fileId="getUserInfo?.avatarId"
-          :isDef="true"
           :style="{ 'margin-right': '0.5rem' }"
         />
         <span :class="`${prefixCls}__info hidden md:block`">

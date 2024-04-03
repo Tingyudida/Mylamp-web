@@ -36,7 +36,7 @@
 
         <BasicUpload
           v-hasAnyPermission="[RoleEnum.SYSTEM_APPENDIX_UPLOAD]"
-          :api="uploadToTenant"
+          :api="uploadFile"
           :maxNumber="10"
           :maxSize="20"
           :showPreviewButton="false"
@@ -94,7 +94,7 @@
   import { useModal } from '/@/components/Modal';
   import ThumbUrl from '/@/components/Upload/src/ThumbUrl.vue';
   import { download, page, remove } from '/@/api/basic/system/baseFile';
-  import { uploadToTenant } from '/@/api/lamp/file/upload';
+  import { uploadFile } from '/@/api/lamp/file/upload';
   import { columns, searchFormSchema } from './baseFile.data';
   import EditModal from './Edit.vue';
 
@@ -222,7 +222,7 @@
         handleSuccess,
         handleBatchDelete,
         handleBatchDownload,
-        uploadToTenant,
+        uploadFile,
         handleChange: (list: string[]) => {
           createMessage.info(`已上传${list.length}个文件`);
           handleSuccess();

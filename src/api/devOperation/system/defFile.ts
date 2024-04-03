@@ -6,7 +6,7 @@ import { RequestEnum } from '/@/enums/httpEnum';
 import { ServicePrefixEnum } from '/@/enums/commonEnum';
 import type { AxiosRequestConfig } from 'axios';
 
-const MODULAR = 'file/def';
+const MODULAR = 'file';
 
 export const Api = {
   Page: {

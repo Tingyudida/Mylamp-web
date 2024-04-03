@@ -166,7 +166,6 @@ export const editFormSchema = (param): FormSchema[] => {
         uploadParams: param,
         multiple: false,
         maxNumber: 1,
-        isDef: false,
       },
     },
   ];

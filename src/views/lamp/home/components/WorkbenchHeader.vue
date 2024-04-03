@@ -4,7 +4,6 @@
       :fileId="userinfo.avatarId"
       :errorTxt="userinfo?.nickName?.substring(0, 2)"
       :size="72"
-      :isDef="true"
       class="!mx-auto !block"
     />
     <div class="md:ml-6 flex flex-col justify-center md:mt-0 mt-2">

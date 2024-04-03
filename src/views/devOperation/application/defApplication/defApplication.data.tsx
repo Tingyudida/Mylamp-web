@@ -122,7 +122,6 @@ export const editFormSchema = (_): FormSchema[] => {
       componentProps: {
         uploadParams: { bizType: FileBizTypeEnum.DEF_APPLICATION_LOGO },
         circled: false,
-        isDef: true,
       },
     },
     {

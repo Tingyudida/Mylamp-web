@@ -22,7 +22,7 @@
   import { Image } from 'ant-design-vue';
   import { Base64 } from 'js-base64';
   import { propTypes } from '/@/utils/propTypes';
-  import { asyncFindDefUrlById, asyncFindUrlById } from '/@/api/lamp/file/upload';
+  import { asyncFindUrlById } from '/@/api/lamp/file/upload';
   import { errImg } from '/@/utils/file/base64Conver';
   import { useGlobSetting } from '/@/hooks/setting';
 
@@ -39,8 +39,6 @@
       preview: propTypes.bool.def(true),
       placeholder: propTypes.bool.def(false),
       fallback: propTypes.string.def(errImg),
-      // 是否从默认库 查询附件. 若传了api，优先从传入的api中查询；没有传递api，则根据此参数，从内置接口查询
-      isDef: propTypes.bool.def(false),
       api: {
         type: Function as PropType<PromiseFn>,
         default: null,
@@ -75,7 +73,7 @@
           return;
         }
 
-        const api = props.api ?? (props.isDef ? asyncFindDefUrlById : asyncFindUrlById);
+        const api = props.api ?? asyncFindUrlById;
         api(props.fileId).then((res) => {
           if (res.code === 0) {
             realSrc.value = res.data as string;
